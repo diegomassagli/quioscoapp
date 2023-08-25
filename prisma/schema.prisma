@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Producto {
+  id Int @id @default(autoincrement())
+  nombre String
+  precio Float
+  imagen String  
+  categoriaId Int                                                           // este campo que uso para relacionar y tiene que tene el mismo tipo de dato y longitud que en Categoria 
+  categoria Categoria @relation( fields: [categoriaId], references: [id])   // indico la relacion
+}
+
+model Categoria {
+  id Int @id @default(autoincrement())
+  nombre String
+  icono String
+  productos Producto[]          // el [] indica que es una categoria va a tener muchos productos
+}
+
+
+model Orden {
+  id Int @id @default(autoincrement())
+  nombre String
+  fecha String
+  total Float
+  pedido Json
+  estado Boolean @default(false)
+}
+
+
+// cada vez que hago un cambio en este archivo para que se refleje en la base debo hacer. 
+// npx prisma migrate dev
+// y si quiera resetear la base y borrar los datos
+// npx prisma migrate reset
+// y para visualizar los datos de la base uso webplus o escribo
+// npx prisma studio
